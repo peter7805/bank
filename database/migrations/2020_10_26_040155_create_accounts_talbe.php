@@ -17,9 +17,9 @@ class CreateAccountsTalbe extends Migration
             $table->id();
             $table->string('name', 50);
             $table->string('account', 50);
+            $table->string('userId', 50);
             $table->string('password', 100);
-            $table->integer('error_number');
-            $table->timestamp('login_time')->useCurrent();
+            $table->integer('login_failed');
             $table->timestamp('create_time')->useCurrent();
         });
     }

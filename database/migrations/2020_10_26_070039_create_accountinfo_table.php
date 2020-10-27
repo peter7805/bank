@@ -16,6 +16,7 @@ class CreateAccountInfoTable extends Migration
         Schema::create('accountInfo', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
+            $table->integer('number');
             $table->double('amount', 10, 2);
             $table->double('money', 10, 2);
             $table->double('balance', 10, 2);

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Accounts;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class AccountsController extends Controller
 {
@@ -13,72 +16,33 @@ class AccountsController extends Controller
      */
     public function index()
     {
-        //
+        return view('login');
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * 會員登入驗證
      */
-    public function create()
+    public function login(Request $request, Accounts $accounts)
     {
-        //
+        $account = $request->account;
+        $userId = $request->userId;
+        $password = $request->password;
+
+        $result = $accounts->loginData($account, $userId, $password);
+        return ($result);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * 會員註冊驗證
      */
-    public function store(Request $request)
+    public function signup(Request $request, Accounts $accounts)
     {
-        //
-    }
+        $name = $request->name;
+        $account = $request->account;
+        $userId = $request->userId;
+        $password = $request->password;
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $result = $accounts->signupData($name, $account, $userId, $password);
+        return ($result);
     }
 }
