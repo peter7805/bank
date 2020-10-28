@@ -20,12 +20,12 @@
     }
   </style>
 
-  <title>login</title>
+  <title>signup</title>
 </head>
 
 <body>
   <div class="login_box mt-3 p-5">
-    <h2 class="text-center">歡迎註冊網路銀行</h2>
+    <h2 class="text-center">註冊網路銀行</h2>
     <form>
       <div class="form-group">
         <label for="name">名稱：</label>
@@ -119,7 +119,7 @@
       }
     });
     $("#btncancel").click(function() {
-      window.location.href = "/bank";
+      window.location.href = "/bank/homepage";
     });
   });
 </script>

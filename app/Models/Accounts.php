@@ -22,6 +22,8 @@ class Accounts extends Model
      */
     public function loginData($account, $userId, $password)
     {
+
+        $login_time = date("Y-m-d H:i:s", mktime(date('H') + 8, date('i'), date('s'), date('m'), date('d'), date('Y')));
         $sqlData = $this->where('account', $account)->first();
         if (!empty($sqlData)) {
             $ck_userId = $sqlData->userId;
@@ -34,11 +36,12 @@ class Accounts extends Model
                     return '使用者代碼輸入錯誤';
                 } elseif (!password_verify($password, $ck_password)) {
                     $login_failed++;
-                    $this->where('account', $account)->update(array('login_failed' => $login_failed));
+                    $this->where('account', $account)->update(array('login_failed' => $login_failed, 'login_time' => $login_time));
                     return '密碼輸入錯誤' . $login_failed . '次，3次即凍結帳戶';
                 } else {
                     $login_failed = 0;
-                    $this->where('account', $account)->update(array('login_failed' => $login_failed));
+                    $this->where('account', $account)->update(array('login_failed' => $login_failed, 'login_time' => $login_time));
+                    // $newData = $this->where('account', $account)->first();
                     return true;
                 }
             }
@@ -50,7 +53,7 @@ class Accounts extends Model
     /**
      * 驗證註冊資料。
      */
-    public function signupData($name, $account, $userId, $password, $login_failed = 0)
+    public function signupData($name, $account, $userId, $password, $balance = 0, $login_failed = 0)
     {
         $sqlData = $this->where('account', $account)->first();
         if (empty($sqlData)) {
@@ -60,6 +63,7 @@ class Accounts extends Model
                 'account' => $account,
                 'userId' => $userId,
                 'password' => $password,
+                'balance' => $balance,
                 'login_failed' => $login_failed,
             ));
             return true;

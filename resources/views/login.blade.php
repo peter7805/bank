@@ -26,7 +26,7 @@
 
 <body>
   <div class="login_box mt-3 p-5">
-    <h2 class="text-center mb-3">歡迎登入網路銀行</h2>
+    <h2 class="text-center mb-3">登入網路銀行</h2>
     <form>
       <div class="form-group">
         <label for="account">身分證字號：</label>
@@ -42,7 +42,7 @@
       </div>
       <div class="text-center">
         <button type="button" class="btn btn-primary btn-lg m-3" id="btnok" style="width: 35%;">登入</button>
-        <button type="button" class="btn btn-success btn-lg m-3" id="btnrg" style="width: 35%;">註冊</button>
+        <button type="button" class="btn btn-secondary btn-lg m-3" id="btncancel" style="width: 35%;">取消</button>
       </div>
     </form>
   </div>
@@ -98,8 +98,8 @@
         }
       }
     });
-    $("#btnrg").click(function() {
-      window.location.href = "/bank/signup";
+    $("#btncancel").click(function() {
+      window.location.href = "/bank/homepage";
     });
   });
 </script>

@@ -25,10 +25,8 @@ Route::get('/bank/signup', function () {
     return view('signup');
 });
 //主頁
-Route::get('/bank/homepage', function () {
-    return view('homepage');
-});
-//存款
+Route::get('/bank/homepage', 'AccountInfoController@index');
+// 存款
 Route::get('/bank/deposit', function () {
     return view('deposit');
 });
@@ -46,6 +44,12 @@ Route::get('/bank/search', function () {
 Route::post('/bank/login', 'AccountsController@login');
 //註冊
 Route::post('/bank/signup', 'AccountsController@signup');
+//存款
+Route::post('/bank/deposit', 'AccountInfoController@deposit');
+//提款
+Route::post('/bank/withdrawal', 'AccountInfoController@withdrawal');
+//搜尋
+Route::post('/bank/search', 'AccountInfoController@search');
 
 
 

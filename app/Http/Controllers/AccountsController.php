@@ -29,6 +29,8 @@ class AccountsController extends Controller
         $password = $request->password;
 
         $result = $accounts->loginData($account, $userId, $password);
+        echo $result;
+        exit;
         return ($result);
     }
 
@@ -44,5 +46,12 @@ class AccountsController extends Controller
 
         $result = $accounts->signupData($name, $account, $userId, $password);
         return ($result);
+    }
+
+    /**
+     * 會員登出
+     */
+    public function signout()
+    {
     }
 }

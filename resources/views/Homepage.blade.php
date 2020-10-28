@@ -11,98 +11,157 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
   </script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
+  <style>
+    .login_box {
+      width: 40%;
+      margin: 0px auto;
+    }
+  </style>
   <title>Bank</title>
 </head>
 
 <body>
-    <div>
-      <h1 class="text-center m-4">歡迎光臨網路銀行</h1>
-        <a href="login.php">Sign in</a>
-        <a href="signup.php">Sign up</a>
+
+    <div class="container">
+      <div class="text-center">
+        <h2 class="m-4">歡迎光臨網路銀行</h2>
+      </div>
     </div>
+
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-      <div>
-        <span class="navbar-brand">Welcome ，
-        </span>
-      </div>
-
-      <div class="align-right">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/bank/homepage">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              功能
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">存款</a>
-              <a class="dropdown-item" href="#">提款</a>
-              <a class="dropdown-item" href="#">查詢</a>
-            </div>
-          </li>
-        </ul>
-      </div>
+      @if (!isset($_SESSION['username']))
+        <div class="align-left">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/bank/deposit">存款 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="/bank/withdrawal">提款 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="/bank/search">搜尋紀錄 <span class="sr-only">(current)</span></a>
+            </li>
+          </ul>
+        </div>  
+        <div class="align-right">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active">
+              <a href="logout_api.php">Sign out</a>
+            </li>
+          </ul>
+        </div>          
+      @else
+        <div class="align-left">
+          <ul class="navbar-nav"></ul>
+        </div> 
+        <div class="align-right">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="/bank">Sign in</a></li>
+            <li class="ml-3"><a href="/bank/signup">Sign up</a></li>
+          </ul>
+        </div>          
+      @endif
     </div>
   </nav>
-
-
+  <div class="container">
+    <h5 class="m-3">帳戶資訊</h5>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">帳號</th>
+          <th scope="col">姓名</th>
+          <th scope="col">餘額</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    @yield('content')
+  </div>
 </body>
 <script>
   $(document).ready(function() {
-    $("#btnok").click(function() {
-      var checkAccount = /^[A-Z]{1}[0-9]{9}$/;
-      var checkPwd = /^[a-zA-Z0-9]{6,20}$/;
-      var account = $("#account").val();
-      var userId = $("#userId").val();
-      var pwd = $("#password").val();
-      if (
-        userId != "" &&
-        checkAccount.test(account) &&
-        checkPwd.test(userId) &&
-        checkPwd.test(pwd)
-      ) {
+    //存款
+    $("#depositok").click(function() {
+      var amount = $("#amount").val();
+      var money = $("#money").val();
+      var remark = $("#remark").val();
+      if (money != "") {
         $.ajax({
           type: "POST",
-          url: "/bank/login",
+          url: "/bank/deposit",
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           data: {
-            account: account,
-            userId: userId,
-            password: pwd,
+            user_id: "1",
+            amount: amount,
+            money: money,
+            remark: remark,
           },
           async: false,
           success: function(msg) {
             if(msg == 1){
-              alert('登入成功');
+              alert('存款成功');
               window.location.href = "/bank/homepage";
             }else{
               alert(msg);            
             }
           },
           error: function(msg) {
-            alert("登入失敗");
+            alert("存款失敗");
           }
         });
       } else {
-        if (!checkAccount.test(account)) {
-          alert('身分證字號輸入格式錯誤');
-          $("#password").val("");
-        }else if (!checkPwd.test(userId)) {
-          alert('使用者代碼輸入格式錯誤');
-          $("#password").val("");
-        } else if (!checkPwd.test(pwd)) {
-          alert('password輸入格式錯誤');
-          $("#password").val("");
-        }
+        alert('輸入金額不得為空');
       }
     });
-    $("#btnrg").click(function() {
-      window.location.href = "/bank/signup";
+
+    //提款
+    $("#withdraok").click(function() {
+      var amount = $("#amount").val();
+      var money = $("#money").val();
+      var remark = $("#remark").val();
+      if (money != "" && money <= amount) {
+        $.ajax({
+          type: "POST",
+          url: "/bank/withdrawal",
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: {
+            user_id: "1",
+            amount: amount,
+            money: money,
+            remark: remark,
+          },
+          async: false,
+          success: function(msg) {
+            if(msg == 1){
+              alert('提款成功');
+              window.location.href = "/bank/homepage";
+            }else{
+              alert(msg);            
+            }
+          },
+          error: function(msg) {
+            alert("提款失敗");
+          }
+        });
+      } else {
+        if(money == ""){
+          alert('輸入金額不得為空');
+        }else{
+          alert('提款金額不得大於帳戶餘額');
+        }
+
+      }
     });
   });
 </script>
