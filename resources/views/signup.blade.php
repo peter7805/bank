@@ -119,7 +119,7 @@
       }
     });
     $("#btncancel").click(function() {
-      window.location.href = "/bank/homepage";
+      window.location.href = "/bank";
     });
   });
 </script>

@@ -29,8 +29,7 @@ class AccountsController extends Controller
         $password = $request->password;
 
         $result = $accounts->loginData($account, $userId, $password);
-        echo $result;
-        exit;
+
         return ($result);
     }
 

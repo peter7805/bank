@@ -47,7 +47,7 @@
         <div class="align-right">
           <ul class="nav navbar-nav navbar-right">
             <li class="active">
-              <a href="logout_api.php">Sign out</a>
+              <a href="/bank">Sign out</a>
             </li>
           </ul>
         </div>          

@@ -42,7 +42,7 @@
       </div>
       <div class="text-center">
         <button type="button" class="btn btn-primary btn-lg m-3" id="btnok" style="width: 35%;">登入</button>
-        <button type="button" class="btn btn-secondary btn-lg m-3" id="btncancel" style="width: 35%;">取消</button>
+        <button type="button" class="btn btn-info btn-lg m-3" id="btnreg" style="width: 35%;">註冊</button>
       </div>
     </form>
   </div>
@@ -73,15 +73,15 @@
             password: pwd,
           },
           async: false,
-          success: function(msg) {
-            if(msg == 1){
+          success: function(res) {
+            if(res.result){
               alert('登入成功');
               window.location.href = "/bank/homepage";
             }else{
-              alert(msg);            
+              alert(res.msg);            
             }
           },
-          error: function(msg) {
+          error: function(res) {
             alert("登入失敗");
           }
         });
@@ -98,8 +98,8 @@
         }
       }
     });
-    $("#btncancel").click(function() {
-      window.location.href = "/bank/homepage";
+    $("#btnreg").click(function() {
+      window.location.href = "/bank/signup";
     });
   });
 </script>
