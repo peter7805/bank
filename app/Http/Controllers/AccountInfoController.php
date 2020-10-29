@@ -17,9 +17,28 @@ class AccountInfoController extends Controller
     public function index()
     {
         $id = 1;
-        $data = DB::table('accounts')->where('id', $id)->value('balance');
+        // $balance = session('balance');
+        $balance = DB::table('accounts')->where('id', $id)->value('balance');
 
-        return view('homepage', array('money' => $data));
+        return view('homepage', ['money' => $balance]);
+    }
+
+    public function deposit_page()
+    {
+        $id = 1;
+        // $balance = session('balance');
+        $balance = DB::table('accounts')->where('id', $id)->value('balance');
+
+        return view('deposit', ['money' => $balance]);
+    }
+
+    public function withdrawal_page()
+    {
+        $id = 1;
+        // $balance = session('balance');
+        $balance = DB::table('accounts')->where('id', $id)->value('balance');
+
+        return view('withdrawal', ['money' => $balance]);
     }
     #存款
     public function deposit(Request $request, AccountInfo $accountInfo)
@@ -29,10 +48,10 @@ class AccountInfoController extends Controller
         $amount = intval($request->amount);
         $money = intval($request->money);
         $balance = $amount + $money;
-        $calculate = 0;
+        $type = 0;
         $remark = $request->remark;
 
-        $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $calculate, $remark);
+        $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $type, $remark);
         return $result;
     }
     #提款
@@ -43,10 +62,10 @@ class AccountInfoController extends Controller
         $amount = intval($request->amount);
         $money = intval($request->money);
         $balance = $amount - $money;
-        $calculate = 1;
+        $type = 1;
         $remark = $request->remark;
 
-        $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $calculate, $remark);
+        $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $type, $remark);
         return $result;
     }
     #搜尋紀錄

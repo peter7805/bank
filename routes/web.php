@@ -27,17 +27,10 @@ Route::get('/bank/signup', function () {
 //主頁
 Route::get('/bank/homepage', 'AccountInfoController@index');
 // 存款
-Route::get('/bank/deposit', function () {
-    return view('deposit');
-});
+Route::get('/bank/deposit', 'AccountInfoController@deposit_page');
 //提款
-Route::get('/bank/withdrawal', function () {
-    return view('withdrawal');
-});
-//搜尋
-Route::get('/bank/search', function () {
-    return view('search');
-});
+Route::get('/bank/withdrawal', 'AccountInfoController@withdrawal_page');
+
 
 #功能
 //登入
@@ -57,3 +50,11 @@ Route::post('/bank/search', 'AccountInfoController@search');
 // Route::get('/accounts/accountInfo', function () {
 //     return App\Models\AccountInfo::all();
 // });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

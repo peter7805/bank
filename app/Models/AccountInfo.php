@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\DB;
 class AccountInfo extends Model
 {
     use HasFactory;
-    protected $table = 'accountInfo';
     public $timestamps = false;
+    protected $table = 'accountInfo';
 
-    public function insertData($user_id, $number, $amount, $money, $balance, $calculate, $remark = "")
+    public function insertData($user_id, $number, $amount, $money, $balance, $type, $remark = "")
     {
         $sqlData = $this->where('number', $number)->first();
         if (empty($sqlData)) {
@@ -22,7 +22,7 @@ class AccountInfo extends Model
                 'amount' => $amount,
                 'money' => $money,
                 'balance' => $balance,
-                'calculate' => $calculate,
+                'type' => $type,
                 'remark' => $remark,
             ));
             DB::table('accounts')->where('id', $user_id)->update(array('balance' => $balance));
@@ -30,5 +30,11 @@ class AccountInfo extends Model
         } else {
             return false;
         }
+    }
+
+    public function selectDate($user_id, $start_time, $end_time)
+    {
+        $sqlData = $this->where('user_id', $user_id)->whereBetween('create_time', [$start_time, $end_time])->get();
+        return $sqlData;
     }
 }

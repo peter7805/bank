@@ -30,17 +30,17 @@
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-      @if (!isset($_SESSION['username']))
+      @if (!isset($_SESSION['rname']))
         <div class="align-left">
           <ul class="navbar-nav">
             <li class="nav-item active">
+              <a class="nav-link" href="/bank/homepage">搜尋紀錄 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="/bank/deposit">存款 <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
               <a class="nav-link" href="/bank/withdrawal">提款 <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="/bank/search">搜尋紀錄 <span class="sr-only">(current)</span></a>
             </li>
           </ul>
         </div>  
@@ -78,21 +78,37 @@
         <tr>
           <th scope="row">1</th>
           <td>Mark</td>
-          <td></td>
+          <td>{{$money}}</td>
         </tr>
       </tbody>
     </table>
-    @yield('content')
+    <div class="login_box p-5">
+      <h4 class="text-center mb-3" >交易紀錄查詢</h4>
+      <form>
+        <div class="form-group">
+          <label for="starTime">開始日期：</label>
+          <input type="date" maxlength="10" class="form-control" id="starTime">
+        </div>
+        <div class="form-group">
+          <label for="endTime">結束日期：</label>
+          <input type="date" maxlength="10" class="form-control" id="endTime">
+        </div>
+        <div class="text-center">
+          <button type="button" class="btn btn-primary btn-lg m-3" id="searchok" style="width: 35%;">送出</button>
+        </div>
+      </form>
+    </div>
+    <div id="info"></div>
   </div>
 </body>
 <script>
   $(document).ready(function() {
-    //存款
-    $("#depositok").click(function() {
-      var amount = $("#amount").val();
-      var money = $("#money").val();
-      var remark = $("#remark").val();
-      if (money != "") {
+    $("#searchok").click(function() {
+      var starTime = $("#starTime").val();
+      var endTime = $("#endTime").val();
+      console.log(starTime);
+      console.log(endTime);
+      if (starTime != "" && endTime != "") {
         $.ajax({
           type: "POST",
           url: "/bank/deposit",
@@ -119,46 +135,14 @@
           }
         });
       } else {
-        alert('輸入金額不得為空');
-      }
-    });
-
-    //提款
-    $("#withdraok").click(function() {
-      var amount = $("#amount").val();
-      var money = $("#money").val();
-      var remark = $("#remark").val();
-      if (money != "" && money <= amount) {
-        $.ajax({
-          type: "POST",
-          url: "/bank/withdrawal",
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          data: {
-            user_id: "1",
-            amount: amount,
-            money: money,
-            remark: remark,
-          },
-          async: false,
-          success: function(msg) {
-            if(msg == 1){
-              alert('提款成功');
-              window.location.href = "/bank/homepage";
-            }else{
-              alert(msg);            
-            }
-          },
-          error: function(msg) {
-            alert("提款失敗");
-          }
-        });
-      } else {
-        if(money == ""){
-          alert('輸入金額不得為空');
+        if(starTime != ""){
+          alert('開始日期不得為空');
+        }else if(endTime != ""){
+          alert('結束日期不得為空');
+        }else if(endTime <= starTime){
+          alert('日期輸入有誤');
         }else{
-          alert('提款金額不得大於帳戶餘額');
+          alert('日期不得為空');
         }
 
       }

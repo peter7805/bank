@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAccountsTalbe extends Migration
+class CreateUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,17 @@ class CreateAccountsTalbe extends Migration
      */
     public function up()
     {
-        Schema::create('accounts', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
             $table->string('account', 50);
             $table->string('userId', 50);
             $table->string('password', 100);
+            $table->string('remember_token', 100)->nullable();
             $table->integer('balance');
             $table->integer('login_failed');
-            $table->timestamp('login_time')->nullable();
-            $table->timestamp('create_time')->useCurrent();
+            $table->timestamp('login_time');
+            $table->timestamps();
         });
     }
 
@@ -33,6 +34,6 @@ class CreateAccountsTalbe extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('users');
     }
 }
