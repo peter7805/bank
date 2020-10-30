@@ -22,7 +22,7 @@ class Accounts extends Model
      */
     public function selectData($account)
     {
-        $sqlData = $this->where('account', $account)->first();
+        $sqlData = $this->where('account', $account)->orWhere('id', $account)->first();
         return $sqlData;
     }
 

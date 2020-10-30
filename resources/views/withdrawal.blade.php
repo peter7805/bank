@@ -30,16 +30,16 @@
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-      @if (!isset($_SESSION['rname']))
+      @if (Session::get('id'))
         <div class="align-left">
           <ul class="navbar-nav">
             <li class="nav-item">
               <a class="nav-link" href="/bank/homepage">搜尋紀錄 <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
               <a class="nav-link" href="/bank/deposit">存款 <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
               <a class="nav-link" href="/bank/withdrawal">提款 <span class="sr-only">(current)</span></a>
             </li>
           </ul>
@@ -65,29 +65,13 @@
     </div>
   </nav>
   <div class="container">
-    <h5 class="m-3">帳戶資訊</h5>
-    <table class="table">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">帳號</th>
-          <th scope="col">姓名</th>
-          <th scope="col">餘額</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>{{$money}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <h5 class="m-3">帳戶資訊--@if(Session::get('id'))<span>姓名：{{$name}}  ｜</span><span>餘額：{{$balance}}</span>@endif</h5>
     <div class="login_box p-5">
       <h4 class="text-center mb-3" style="color: red">提款</h4>
       <form>
         <div class="form-group">
           <label for="w_amount">目前餘額：</label>
-          <input type="number" maxlength="10" class="form-control" id="w_amount" value="{{$money}}" disabled>
+          <input type="number" maxlength="10" class="form-control" id="w_amount" value="{{$balance}}" disabled>
         </div>
         <div class="form-group">
           <label for="w_money">提款金額：</label>
@@ -111,7 +95,7 @@
       var w_amount = $("#w_amount").val();
       var w_money = $("#w_money").val();
       var w_remark = $("#w_remark").val();
-      if (w_money != "" && w_money <= w_amount) {
+      if (w_money != "" && w_money <= w_amount && w_money != 0) {
         $.ajax({
           type: "POST",
           url: "/bank/withdrawal",
@@ -119,7 +103,7 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           data: {
-            user_id: "1",
+            user_id: {{$id}},
             amount: w_amount,
             money: w_money,
             remark: w_remark,
@@ -128,7 +112,7 @@
           success: function(msg) {
             if(msg == 1){
               alert('提款成功');
-              window.location.href = "/bank/homepage";
+              location.reload();
             }else{
               alert(msg);            
             }
@@ -140,6 +124,8 @@
       } else {
         if(w_money == ""){
           alert('輸入金額不得為空');
+        }else if(w_money == 0){
+          alert('提款金額不得為0');
         }else if(w_money > w_amount){
           alert('提款金額不得大於帳戶餘額');
         }

@@ -14,6 +14,7 @@ class AccountInfo extends Model
 
     public function insertData($user_id, $number, $amount, $money, $balance, $type, $remark = "")
     {
+        DB::table('accounts')->where('id', $user_id)->lockForUpdate()->get();
         $sqlData = $this->where('number', $number)->first();
         if (empty($sqlData)) {
             $this->insert(array(
@@ -32,9 +33,10 @@ class AccountInfo extends Model
         }
     }
 
-    public function selectDate($user_id, $start_time, $end_time)
+    public function searchData($user_id, $start_time, $end_time)
     {
-        $sqlData = $this->where('user_id', $user_id)->whereBetween('create_time', [$start_time, $end_time])->get();
+        $sqlData = $this->where('user_id', $user_id)->whereBetween('create_time', [$start_time, $end_time])->orderBy('create_time', 'desc')->get();
+
         return $sqlData;
     }
 }

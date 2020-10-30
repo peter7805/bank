@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\AccountInfo;
 use App\Models\Accounts;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class AccountInfoController extends Controller
 {
@@ -14,31 +15,46 @@ class AccountInfoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Accounts $accounts)
     {
-        $id = 1;
-        // $balance = session('balance');
-        $balance = DB::table('accounts')->where('id', $id)->value('balance');
-
-        return view('homepage', ['money' => $balance]);
+        if (Session::get('id')) {
+            $id = Session::get('id');
+            $data = $accounts->selectData($id);
+            return view('homepage', ['id' => $data['id'], 'name' => $data['name'], 'balance' => $data['balance']]);
+        } else {
+            return view('/login');
+        }
     }
 
-    public function deposit_page()
+    public function deposit_page(Accounts $accounts)
     {
-        $id = 1;
-        // $balance = session('balance');
-        $balance = DB::table('accounts')->where('id', $id)->value('balance');
-
-        return view('deposit', ['money' => $balance]);
+        if (Session::get('id')) {
+            $id = Session::get('id');
+            $data = $accounts->selectData($id);
+            return view('deposit', ['id' => $data['id'], 'name' => $data['name'], 'balance' => $data['balance']]);
+        } else {
+            return view('/login');
+        }
     }
 
-    public function withdrawal_page()
+    public function withdrawal_page(Accounts $accounts)
     {
-        $id = 1;
-        // $balance = session('balance');
-        $balance = DB::table('accounts')->where('id', $id)->value('balance');
-
-        return view('withdrawal', ['money' => $balance]);
+        if (Session::get('id')) {
+            $id = Session::get('id');
+            $data = $accounts->selectData($id);
+            return view('withdrawal', ['id' => $data['id'], 'name' => $data['name'], 'balance' => $data['balance']]);
+        } else {
+            return view('/login');
+        }
+    }
+    #紀錄
+    public function show(Request $request, AccountInfo $accountInfo)
+    {
+        $user_id = $request->user_id;
+        $start_time = date("Y-m-d H:i:s", strtotime($request->start_time));
+        $end_time = date("Y-m-d H:i:s", (strtotime($request->end_time) + 86399));
+        $searchData = $accountInfo->searchData($user_id, $start_time, $end_time);
+        return $searchData;
     }
     #存款
     public function deposit(Request $request, AccountInfo $accountInfo)

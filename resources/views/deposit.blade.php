@@ -21,73 +21,55 @@
 </head>
 
 <body>
-
     <div class="container">
       <div class="text-center">
         <h2 class="m-4">歡迎光臨網路銀行</h2>
       </div>
     </div>
-
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-      @if (!isset($_SESSION['rname']))
-        <div class="align-left">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="/bank/homepage">搜尋紀錄 <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="/bank/deposit">存款 <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/bank/withdrawal">提款 <span class="sr-only">(current)</span></a>
-            </li>
-          </ul>
-        </div>  
-        <div class="align-right">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="active">
-              <a href="/bank">Sign out</a>
-            </li>
-          </ul>
-        </div>          
-      @else
-        <div class="align-left">
-          <ul class="navbar-nav"></ul>
-        </div> 
-        <div class="align-right">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="/bank">Sign in</a></li>
-            <li class="ml-3"><a href="/bank/signup">Sign up</a></li>
-          </ul>
-        </div>          
-      @endif
-    </div>
-  </nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        @if (Session::get('id'))
+          <div class="align-left">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/bank/homepage">搜尋紀錄 <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/bank/deposit">存款 <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/bank/withdrawal">提款 <span class="sr-only">(current)</span></a>
+              </li>
+            </ul>
+          </div>  
+          <div class="align-right">
+            <ul class="nav navbar-nav navbar-right">
+              <li class="active">
+                <a href="/bank">Sign out</a>
+              </li>
+            </ul>
+          </div>          
+        @else
+          <div class="align-left">
+            <ul class="navbar-nav"></ul>
+          </div> 
+          <div class="align-right">
+            <ul class="nav navbar-nav navbar-right">
+              <li class="active"><a href="/bank">Sign in</a></li>
+              <li class="ml-3"><a href="/bank/signup">Sign up</a></li>
+            </ul>
+          </div>          
+        @endif
+      </div>
+    </nav>
   <div class="container">
-    <h5 class="m-3">帳戶資訊</h5>
-    <table class="table">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">帳號</th>
-          <th scope="col">姓名</th>
-          <th scope="col">餘額</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>{{$money}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <h5 class="m-3">帳戶資訊--@if(Session::get('id'))<span>姓名：{{$name}}  ｜</span><span>餘額：{{$balance}}</span>@endif</h5>
     <div class="login_box p-5">
       <h4 class="text-center mb-3" style="color: royalblue">存款</h4>
       <form>
         <div class="form-group">
           <label for="amount">目前餘額：</label>
-          <input type="number" maxlength="10" class="form-control" id="amount" value="{{$money}}" disabled>
+          <input type="number" maxlength="10" class="form-control" id="amount" value="{{$balance}}" disabled>
         </div>
         <div class="form-group">
           <label for="money">存款金額：</label>
@@ -111,7 +93,7 @@
       var amount = $("#amount").val();
       var money = $("#money").val();
       var remark = $("#remark").val();
-      if (money != "") {
+      if (money != "" && money <= 50000) {
         $.ajax({
           type: "POST",
           url: "/bank/deposit",
@@ -119,7 +101,7 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           data: {
-            user_id: "1",
+            user_id: {{$id}},
             amount: amount,
             money: money,
             remark: remark,
@@ -128,7 +110,7 @@
           success: function(msg) {
             if(msg == 1){
               alert('存款成功');
-              window.location.href = "/bank/homepage";
+              location.reload();
             }else{
               alert(msg);            
             }
@@ -138,7 +120,11 @@
           }
         });
       } else {
-        alert('輸入金額不得為空');
+        if(money == ""){
+          alert('輸入金額不得為空');          
+        }else if(money > 50000){
+          alert('單筆存款不得高於50000')
+        }
       }
     });
   });

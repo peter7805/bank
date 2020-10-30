@@ -30,7 +30,7 @@
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-      @if (!isset($_SESSION['rname']))
+      @if (Session::get('id'))
         <div class="align-left">
           <ul class="navbar-nav">
             <li class="nav-item active">
@@ -65,29 +65,31 @@
     </div>
   </nav>
   <div class="container">
-    <h5 class="m-3">帳戶資訊</h5>
-    <table class="table">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">帳號</th>
-          <th scope="col">姓名</th>
-          <th scope="col">餘額</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>{{$money}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <h5 class="m-3">帳戶資訊--@if(Session::get('id'))<span>姓名：{{$name}}  ｜</span><span>餘額：{{$balance}}</span>@endif</h5>
+
+    <div>
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col" style="width:5%;"></th>
+            <th scope="col" style="width:25%;">編號</th>
+            <th scope="col" style="width:10%;">類型</th>
+            <th scope="col" style="width:10%;">金額</th>
+            <th scope="col" style="width:10%;">餘額</th>
+            <th scope="col" style="width:15%;">備註</th>
+            <th scope="col" style="width:25%;">時間</th>
+          </tr>
+        </thead>
+        <tbody id="info">
+        </tbody>
+      </table>
+    </div>
     <div class="login_box p-5">
       <h4 class="text-center mb-3" >交易紀錄查詢</h4>
       <form>
         <div class="form-group">
-          <label for="starTime">開始日期：</label>
-          <input type="date" maxlength="10" class="form-control" id="starTime">
+          <label for="startTime">開始日期：</label>
+          <input type="date" maxlength="10" class="form-control" id="startTime">
         </div>
         <div class="form-group">
           <label for="endTime">結束日期：</label>
@@ -98,53 +100,52 @@
         </div>
       </form>
     </div>
-    <div id="info"></div>
   </div>
 </body>
 <script>
   $(document).ready(function() {
     $("#searchok").click(function() {
-      var starTime = $("#starTime").val();
-      var endTime = $("#endTime").val();
-      console.log(starTime);
-      console.log(endTime);
-      if (starTime != "" && endTime != "") {
+      var start_time = $("#startTime").val();
+      var end_time = $("#endTime").val();
+      var satrt_t = (Date.parse(start_time));
+      var end_t = (Date.parse(end_time)).valueOf();
+      if (start_time != "" && end_time != "" && end_t >= satrt_t) {
         $.ajax({
           type: "POST",
-          url: "/bank/deposit",
+          url: "/bank/show",
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           data: {
-            user_id: "1",
-            amount: amount,
-            money: money,
-            remark: remark,
+            user_id: {{$id}},
+            start_time: start_time,
+            end_time: end_time,
           },
           async: false,
-          success: function(msg) {
-            if(msg == 1){
-              alert('存款成功');
-              window.location.href = "/bank/homepage";
-            }else{
-              alert(msg);            
+          success: function(res) {
+            for (i = 0; i < res.length; i++) {
+              if(res[i].type == 0){
+                res[i].type = '存款';
+              }else{
+                res[i].type = '提款';
+              }
+              $("#info").append(
+                `<tr><th scope = "row" style="width:5%;">${res[i].id}</th><td style="width:25%;">${res[i].number}</td><td style="width:10%;">${res[i].type}</td><td style="width:10%;">${res[i].money}</td><td style="width:10%;">${res[i].balance}</td><td style="width:15%;">${res[i].remark}</td><td style="width:25%;">${res[i].create_time}</td></tr>`
+              );
             }
           },
           error: function(msg) {
-            alert("存款失敗");
+            alert("查詢失敗");
           }
         });
       } else {
-        if(starTime != ""){
+        if(start_time == ""){
           alert('開始日期不得為空');
-        }else if(endTime != ""){
+        }else if(end_time == ""){
           alert('結束日期不得為空');
-        }else if(endTime <= starTime){
+        }else if(end_t < satrt_t){
           alert('日期輸入有誤');
-        }else{
-          alert('日期不得為空');
         }
-
       }
     });
   });

@@ -13,23 +13,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 #頁面
 //登入
-Route::get('/bank', 'AccountsController@index');
+Route::get('/', 'AccountsController@index');
 //註冊
 Route::get('/bank/signup', function () {
     return view('signup');
 });
 //主頁
-Route::get('/bank/homepage', 'AccountInfoController@index');
+Route::get('/bank/homepage', 'AccountInfoController@index')->middleware('userAuth');;
 // 存款
-Route::get('/bank/deposit', 'AccountInfoController@deposit_page');
+Route::get('/bank/deposit', 'AccountInfoController@deposit_page')->middleware('userAuth');;
 //提款
-Route::get('/bank/withdrawal', 'AccountInfoController@withdrawal_page');
+Route::get('/bank/withdrawal', 'AccountInfoController@withdrawal_page')->middleware('userAuth');;
+//登出
+Route::get('/bank', 'AccountsController@signout');
 
 
 #功能
@@ -38,11 +40,11 @@ Route::post('/bank/login', 'AccountsController@login');
 //註冊
 Route::post('/bank/signup', 'AccountsController@signup');
 //存款
-Route::post('/bank/deposit', 'AccountInfoController@deposit');
+Route::post('/bank/deposit', 'AccountInfoController@deposit')->middleware('userAuth');;
 //提款
-Route::post('/bank/withdrawal', 'AccountInfoController@withdrawal');
+Route::post('/bank/withdrawal', 'AccountInfoController@withdrawal')->middleware('userAuth');;
 //搜尋
-Route::post('/bank/search', 'AccountInfoController@search');
+Route::post('/bank/show', 'AccountInfoController@show')->middleware('userAuth');;
 
 
 

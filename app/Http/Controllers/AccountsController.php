@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Accounts;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class AccountsController extends Controller
 {
@@ -27,7 +28,7 @@ class AccountsController extends Controller
         $account = $request->account;
         $userId = $request->userId;
         $password = $request->password;
-        $login_time = date("Y-m-d H:i:s", mktime(date('H') + 8, date('i'), date('s'), date('m'), date('d'), date('Y')));
+        $login_time = date("Y-m-d H:i:s");
         $sqlData = $accounts->selectData($account);
         if (!empty($sqlData)) {
             $ck_userId = $sqlData->userId;
@@ -46,7 +47,8 @@ class AccountsController extends Controller
                     $login_failed = 0;
                     $accounts->loginFaile($account, $login_failed, $login_time);
                     $newData = $accounts->selectData($account);
-                    return array('result' => true, 'msg' => $newData);;
+                    Session::put('id', $newData['id']);
+                    return array('result' => true);;
                 }
             }
         } else {
@@ -74,5 +76,8 @@ class AccountsController extends Controller
      */
     public function signout()
     {
+        Session::flush();
+        return redirect('/');
+        // return view('/login');
     }
 }
