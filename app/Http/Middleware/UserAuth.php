@@ -11,7 +11,7 @@ class UserAuth extends Middleware
 
   public function handle($request, Closure $next)
   {
-    if (!Session::get('id')) {
+    if (!Session::has('id')) {
       return redirect('/');
     }
     return $next($request);

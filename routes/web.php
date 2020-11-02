@@ -25,11 +25,11 @@ Route::get('/bank/signup', function () {
     return view('signup');
 });
 //主頁
-Route::get('/bank/homepage', 'AccountInfoController@index')->middleware('userAuth');;
+Route::get('/bank/homepage', 'AccountInfoController@index');
 // 存款
-Route::get('/bank/deposit', 'AccountInfoController@deposit_page')->middleware('userAuth');;
+Route::get('/bank/deposit', 'AccountInfoController@deposit_page');
 //提款
-Route::get('/bank/withdrawal', 'AccountInfoController@withdrawal_page')->middleware('userAuth');;
+Route::get('/bank/withdrawal', 'AccountInfoController@withdrawal_page');
 //登出
 Route::get('/bank', 'AccountsController@signout');
 
@@ -40,11 +40,11 @@ Route::post('/bank/login', 'AccountsController@login');
 //註冊
 Route::post('/bank/signup', 'AccountsController@signup');
 //存款
-Route::post('/bank/deposit', 'AccountInfoController@deposit')->middleware('userAuth');;
+Route::post('/bank/deposit', 'AccountInfoController@deposit');
 //提款
-Route::post('/bank/withdrawal', 'AccountInfoController@withdrawal')->middleware('userAuth');;
+Route::post('/bank/withdrawal', 'AccountInfoController@withdrawal');
 //搜尋
-Route::post('/bank/show', 'AccountInfoController@show')->middleware('userAuth');;
+Route::post('/bank/show', 'AccountInfoController@show');
 
 
 

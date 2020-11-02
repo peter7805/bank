@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SignupPost;
 use Illuminate\Http\Request;
 use App\Models\Accounts;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AccountsController extends Controller
 {
@@ -59,8 +62,56 @@ class AccountsController extends Controller
     /**
      * 會員註冊驗證
      */
-    public function signup(Request $request, Accounts $accounts)
+    public function signup(SignupPost $request, Accounts $accounts)
     {
+        $validated = $request->validated();
+
+        // $validatedData = $request->validate([
+        //     'name' => 'required|string',
+        //     'account' => ['required', 'regex:/^[A-Z]{1}[0-9]{9}$/', 'unique:accounts'],
+        //     'userId' => ['required', 'regex:/[a-zA-Z0-9]/', 'min:6', 'max:20'],
+        //     'password' => ['required', 'regex:/[a-zA-Z0-9]/', 'min:6', 'max:20'],
+        // ]);
+
+        // $rules = [
+        //     'name' => 'required|string',
+        //     'account' => ['required', 'regex:/^[A-Z]{1}[0-9]{9}$/', 'unique:accounts'],
+        //     'userId' => ['required', 'regex:/[a-zA-Z0-9]/', 'min:6', 'max:20'],
+        //     'password' => ['required', 'regex:/[a-zA-Z0-9]/', 'min:6', 'max:20'],
+        // ];
+        // $messages = [
+        //     'name.required' => '請輸入名稱',
+        //     'account.required' => '請輸入身分證字號',
+        //     'userId.required' => '請輸入使用者代號',
+        //     'password.required' => '請輸入密碼',
+        // ];
+
+        // $result = Validator::make($rules, $messages);
+
+        // if ($result->fails()) {
+        //     return redirect()->route('signup')
+        //         ->withErrors($result);
+        // }
+
+        // $validator = Validator::make($request->all(), [
+        //     'name' => 'required|string',
+        //     'account' => ['required', 'regex:/^[A-Z]{1}[0-9]{9}$/', 'unique:accounts'],
+        //     'userId' => ['required', 'regex:/[a-zA-Z0-9]/', 'min:6', 'max:20'],
+        //     'password' => ['required', 'regex:/[a-zA-Z0-9]/', 'min:6', 'max:20'],
+        // ]);
+
+        // var_dump($validator);
+        // exit;
+
+        // if ($validator->fails()) {
+        //     return redirect('/bank/signup')
+        //         ->withErrors($validator)
+        //         ->withInput();
+        // }
+
+
+
+
         $name = $request->name;
         $account = $request->account;
         $userId = $request->userId;

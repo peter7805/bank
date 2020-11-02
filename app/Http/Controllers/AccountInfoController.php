@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Session;
 
 class AccountInfoController extends Controller
 {
+
+    public function __construct()
+    {
+        #需要登入才能使用此class
+        $this->middleware('userAuth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -83,9 +89,5 @@ class AccountInfoController extends Controller
 
         $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $type, $remark);
         return $result;
-    }
-    #搜尋紀錄
-    public function search(Request $request, AccountInfo $accountInfo)
-    {
     }
 }

@@ -52,6 +52,8 @@
         <button type="button" class="btn btn-secondary btn-lg m-3" id="btncancel" style="width: 35%;">取消</button>
       </div>
     </form>
+    <div id="error_info" class="text-center" style="color:red;">
+    </div>
   </div>
 </body>
 <script>
@@ -94,7 +96,13 @@
             }
           },
           error: function(res) {
-            alert("登入失敗");
+            var text = Object.values(res.responseJSON.errors);
+            $("#error_info").empty();
+            for(i=0;i<text.length;i++){
+              $("#error_info").append(
+                '<p>'+text[i]+'</p>'
+              );
+            }
           }
         });
       } else {

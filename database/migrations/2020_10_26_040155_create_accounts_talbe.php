@@ -19,8 +19,8 @@ class CreateAccountsTalbe extends Migration
             $table->string('account', 50);
             $table->string('userId', 50);
             $table->string('password', 100);
-            $table->integer('balance');
-            $table->integer('login_failed');
+            $table->integer('balance')->nullable();
+            $table->integer('login_failed')->nullable();
             $table->timestamp('login_time')->nullable();
             $table->timestamp('create_time')->useCurrent();
         });
