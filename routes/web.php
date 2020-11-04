@@ -13,16 +13,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
 
 #頁面
 //登入
-Route::get('/', 'AccountsController@index');
+Route::get('/bank', 'AccountsController@index');
 //註冊
 Route::get('/bank/signup', function () {
-    return view('signup');
+    return view('bank.signup');
 });
 //主頁
 Route::get('/bank/homepage', 'AccountInfoController@index');
@@ -31,7 +35,7 @@ Route::get('/bank/deposit', 'AccountInfoController@deposit_page');
 //提款
 Route::get('/bank/withdrawal', 'AccountInfoController@withdrawal_page');
 //登出
-Route::get('/bank', 'AccountsController@signout');
+Route::get('/bank/logout', 'AccountsController@signout');
 
 
 #功能
@@ -45,18 +49,3 @@ Route::post('/bank/deposit', 'AccountInfoController@deposit');
 Route::post('/bank/withdrawal', 'AccountInfoController@withdrawal');
 //搜尋
 Route::post('/bank/show', 'AccountInfoController@show');
-
-
-
-//讀取資料庫資料
-// Route::get('/accounts/accountInfo', function () {
-//     return App\Models\AccountInfo::all();
-// });
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -17,7 +17,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const HOME = '/dashboard';
 
     /**
      * The controller namespace for the application.
@@ -34,6 +34,7 @@ class RouteServiceProvider extends ServiceProvider
      * @return void
      */
 
+    //重新定義位置
     protected $namespace = 'App\Http\Controllers';
 
     public function boot()

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\AccountInfo;
 use App\Models\Accounts;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class AccountInfoController extends Controller
@@ -23,34 +22,34 @@ class AccountInfoController extends Controller
      */
     public function index(Accounts $accounts)
     {
-        if (Session::get('id')) {
+        if (Session::has('id')) {
             $id = Session::get('id');
             $data = $accounts->selectData($id);
-            return view('homepage', ['id' => $data['id'], 'name' => $data['name'], 'balance' => $data['balance']]);
+            return view('bank.homepage', ['id' => $data['id'], 'name' => $data['name'], 'balance' => $data['balance']]);
         } else {
-            return view('/login');
+            return view('bank.login');
         }
     }
 
     public function deposit_page(Accounts $accounts)
     {
-        if (Session::get('id')) {
+        if (Session::has('id')) {
             $id = Session::get('id');
             $data = $accounts->selectData($id);
-            return view('deposit', ['id' => $data['id'], 'name' => $data['name'], 'balance' => $data['balance']]);
+            return view('bank.deposit', ['id' => $data['id'], 'name' => $data['name'], 'balance' => $data['balance']]);
         } else {
-            return view('/login');
+            return view('bank.login');
         }
     }
 
     public function withdrawal_page(Accounts $accounts)
     {
-        if (Session::get('id')) {
+        if (Session::has('id')) {
             $id = Session::get('id');
             $data = $accounts->selectData($id);
-            return view('withdrawal', ['id' => $data['id'], 'name' => $data['name'], 'balance' => $data['balance']]);
+            return view('bank.withdrawal', ['id' => $data['id'], 'name' => $data['name'], 'balance' => $data['balance']]);
         } else {
-            return view('/login');
+            return view('bank.login');
         }
     }
     #紀錄
@@ -72,7 +71,6 @@ class AccountInfoController extends Controller
         $balance = $amount + $money;
         $type = 0;
         $remark = $request->remark;
-
         $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $type, $remark);
         return $result;
     }

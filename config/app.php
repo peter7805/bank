@@ -66,9 +66,8 @@ return [
     | ahead and set this to a sensible default for you out of the box.
     |
     */
-    //時區
-    // 'timezone' => 'UTC',
-    'timezone' => 'Asia/Taipei',
+
+    'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------
@@ -175,6 +174,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\FortifyServiceProvider::class,
+        App\Providers\JetstreamServiceProvider::class,
 
     ],
 
