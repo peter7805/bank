@@ -45,7 +45,7 @@
           <div class="align-right">
             <ul class="nav navbar-nav navbar-right">
               <li class="active">
-                <a href="/bank">Sign out</a>
+                <a href="/bank/logout">Sign out</a>
               </li>
             </ul>
           </div>          
