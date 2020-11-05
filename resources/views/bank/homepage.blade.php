@@ -21,20 +21,18 @@
 </head>
 
 <body>
-
-    <div class="container">
-      <div class="text-center">
-        <h4 class="m-3">網路銀行</h4>
-      </div>
+  <div class="container">
+    <div class="text-center">
+      <h4 class="m-3">網路銀行</h4>
     </div>
-
+  </div>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
       @if (Session::has('id'))
         <div class="align-left">
           <ul class="navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="/bank/homepage">搜尋紀錄 <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="/bank/homepage">交易紀錄 <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/bank/deposit">存款 <span class="sr-only">(current)</span></a>
@@ -65,49 +63,70 @@
     </div>
   </nav>
   <div class="container">
-    <h5 class="m-3">帳戶資訊--@if(Session::has('id'))<span>姓名：{{$name}}  ｜</span><span>餘額：{{$balance}}</span>@endif</h5>
-
+    <h5 class="m-3">帳戶資訊--
+      @if(Session::has('id'))<span>姓名：{{session('name')}}｜</span><span>餘額：{{session('balance')}}</span>@endif
+    </h5>
     <div>
       <table class="table table-bordered">
         <thead class="thead-light">
           <tr>
             <th scope="col" style="width:5%;"></th>
-            <th scope="col" style="width:25%;">編號</th>
-            <th scope="col" style="width:10%;">類型</th>
-            <th scope="col" style="width:10%;">金額</th>
+            <th scope="col" style="width:25%;">交易編號</th>
+            <th scope="col" style="width:10%;">交易類型</th>
+            <th scope="col" style="width:10%;">交易金額</th>
             <th scope="col" style="width:10%;">餘額</th>
             <th scope="col" style="width:15%;">備註</th>
-            <th scope="col" style="width:25%;">時間</th>
+            <th scope="col" style="width:25%;">交易時間</th>
           </tr>
         </thead>
         <tbody id="info">
+          @if (isset($searchData))
+            @foreach ($searchData as $data)
+              <tr>
+                <th scope="col" style="width:5%;">{{$data->id}}</th>
+                <th scope="col" style="width:25%;">{{$data->number}}</th>
+                <th scope="col" style="width:10%;">{{$data->type}}</th>
+                <th scope="col" style="width:10%;">{{$data->money}}</th>
+                <th scope="col" style="width:10%;">{{$data->balance}}</th>
+                <th scope="col" style="width:15%;">{{$data->remark}}</th>
+                <th scope="col" style="width:25%;">{{$data->create_time}}</th>
+              </tr>
+            @endforeach              
+          @endif
         </tbody>
       </table>
+      @if (isset($errormsg))
+        <div id="error_info" class="text-center" style="color:red;">{{$errormsg}}</div>
+      @endif
+      @if (isset($searchData))
+        {{ $searchData->withQueryString()->links() }}
+      @endif
     </div>
     <div class="login_box p-5">
       <h4 class="text-center mb-3" >交易紀錄查詢</h4>
-      <form>
+      <form action="/bank/show" method="GET">
+        @csrf
         <div class="form-group">
           <label for="startTime">開始日期：</label>
-          <input type="date" maxlength="10" class="form-control" id="startTime">
+          <input type="date" maxlength="10" class="form-control" id="start_time" name="start_time">
         </div>
         <div class="form-group">
           <label for="endTime">結束日期：</label>
-          <input type="date" maxlength="10" class="form-control" id="endTime">
+          <input type="date" maxlength="10" class="form-control" id="end_time" name="end_time">
         </div>
         <div class="text-center">
-          <button type="button" class="btn btn-outline-primary btn-lg m-3" id="searchok" style="width: 35%;">送出</button>
+          <button type="sumbit" class="btn btn-outline-primary btn-lg m-3" id="searchok" style="width: 35%;">送出</button>
         </div>
       </form>
     </div>
   </div>
 </body>
-<script>
+{{-- <script>
   $(document).ready(function() {
     $("#searchok").click(function() {
       $("#info").empty();
-      var start_time = $("#startTime").val();
-      var end_time = $("#endTime").val();
+      var start_time = $("#start_time").val();
+      var end_time = $("#end_time").val();
       var satrt_t = (Date.parse(start_time));
       var end_t = (Date.parse(end_time)).valueOf();
       if (start_time != "" && end_time != "" && end_t >= satrt_t) {
@@ -118,7 +137,7 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           data: {
-            user_id: {{$id}},
+            user_id: {{session('id')}},
             start_time: start_time,
             end_time: end_time,
           },
@@ -153,6 +172,5 @@
       }
     });
   });
-</script>
-
+</script> --}}
 </html>

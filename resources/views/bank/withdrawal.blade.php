@@ -21,20 +21,18 @@
 </head>
 
 <body>
-
-    <div class="container">
-      <div class="text-center">
-        <h2 class="m-4">網路銀行</h2>
-      </div>
+  <div class="container">
+    <div class="text-center">
+      <h4 class="m-3">網路銀行</h4>
     </div>
-
+  </div>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
       @if (Session::has('id'))
         <div class="align-left">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href="/bank/homepage">搜尋紀錄 <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="/bank/homepage">交易紀錄 <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/bank/deposit">存款 <span class="sr-only">(current)</span></a>
@@ -103,7 +101,7 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           data: {
-            user_id: {{$id}},
+            user_id: {{session('id')}},
             amount: w_amount,
             money: w_money,
             remark: w_remark,

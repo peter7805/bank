@@ -20,7 +20,7 @@ class CreateAccountInfoTable extends Migration
             $table->double('amount', 10, 2);
             $table->double('money', 10, 2);
             $table->double('balance', 10, 2);
-            $table->integer('type');
+            $table->string('type', 2);
             $table->string('remark', 320)->nullable();
             $table->timestamp('create_time')->useCurrent();
         });

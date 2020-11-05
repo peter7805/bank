@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\AccountInfo;
 use App\Models\Accounts;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class AccountInfoController extends Controller
 {
@@ -55,11 +56,15 @@ class AccountInfoController extends Controller
     #紀錄
     public function show(Request $request, AccountInfo $accountInfo)
     {
-        $user_id = $request->user_id;
+
+        $user_id = session('id');
         $start_time = date("Y-m-d H:i:s", strtotime($request->start_time));
         $end_time = date("Y-m-d H:i:s", (strtotime($request->end_time) + 86399));
+        if (strtotime($start_time) > strtotime($end_time)) {
+            return view('bank.homepage', ['errormsg' => '開始日期不得大於結束日期']);
+        }
         $searchData = $accountInfo->searchData($user_id, $start_time, $end_time);
-        return $searchData;
+        return view('bank.homepage', ['searchData' => $searchData]);
     }
     #存款
     public function deposit(Request $request, AccountInfo $accountInfo)
@@ -69,7 +74,7 @@ class AccountInfoController extends Controller
         $amount = intval($request->amount);
         $money = intval($request->money);
         $balance = $amount + $money;
-        $type = 0;
+        $type = '存款';
         $remark = $request->remark;
         $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $type, $remark);
         return $result;
@@ -82,7 +87,7 @@ class AccountInfoController extends Controller
         $amount = intval($request->amount);
         $money = intval($request->money);
         $balance = $amount - $money;
-        $type = 1;
+        $type = '提款';
         $remark = $request->remark;
 
         $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $type, $remark);

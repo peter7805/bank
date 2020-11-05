@@ -35,7 +35,7 @@ class AccountInfo extends Model
 
     public function searchData($user_id, $start_time, $end_time)
     {
-        $sqlData = $this->where('user_id', $user_id)->whereBetween('create_time', [$start_time, $end_time])->orderBy('create_time', 'desc')->get();
+        $sqlData = $this->where('user_id', $user_id)->whereBetween('create_time', [$start_time, $end_time])->orderBy('create_time', 'desc')->simplePaginate(10);
 
         return $sqlData;
     }

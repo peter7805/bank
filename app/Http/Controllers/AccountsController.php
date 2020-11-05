@@ -84,6 +84,5 @@ class AccountsController extends Controller
     {
         Session::flush();
         return redirect('/bank');
-        // return view('/login');
     }
 }

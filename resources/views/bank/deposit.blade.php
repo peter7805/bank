@@ -23,7 +23,7 @@
 <body>
     <div class="container">
       <div class="text-center">
-        <h2 class="m-4">網路銀行</h2>
+        <h4 class="m-3">網路銀行</h4>
       </div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -32,7 +32,7 @@
           <div class="align-left">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" href="/bank/homepage">搜尋紀錄 <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/bank/homepage">交易紀錄 <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item active">
                 <a class="nav-link" href="/bank/deposit">存款 <span class="sr-only">(current)</span></a>
@@ -63,7 +63,9 @@
       </div>
     </nav>
   <div class="container">
-    <h5 class="m-3">帳戶資訊--@if(Session::has('id'))<span>姓名：{{$name}}  ｜</span><span>餘額：{{$balance}}</span>@endif</h5>
+    <h5 class="m-3">帳戶資訊--
+      @if(Session::has('id'))<span>姓名：{{$name}}｜</span><span>餘額：{{$balance}}</span>@endif
+    </h5>
     <div class="login_box p-5">
       <h4 class="text-center mb-3" style="color: royalblue">存款</h4>
       <form>
@@ -93,7 +95,7 @@
       var amount = $("#amount").val();
       var money = $("#money").val();
       var remark = $("#remark").val();
-      if (money != "" && money <= 50000) {
+      if (money != "" && money <= 50000 && money > 0) {
         $.ajax({
           type: "POST",
           url: "/bank/deposit",
@@ -101,7 +103,7 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           },
           data: {
-            user_id: {{$id}},
+            user_id: {{session('id')}},
             amount: amount,
             money: money,
             remark: remark,
@@ -123,7 +125,11 @@
         if(money == ""){
           alert('輸入金額不得為空');          
         }else if(money > 50000){
-          alert('單筆存款不得高於50000')
+          alert('單筆存款不得高於50000');
+        }else if(money < 0){
+          alert('輸入金額不得為負數');
+        }else if(money == 0){
+          alert('輸入金額不得為0');
         }
       }
     });

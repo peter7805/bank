@@ -48,4 +48,4 @@ Route::post('/bank/deposit', 'AccountInfoController@deposit');
 //提款
 Route::post('/bank/withdrawal', 'AccountInfoController@withdrawal');
 //搜尋
-Route::post('/bank/show', 'AccountInfoController@show');
+Route::get('/bank/show', 'AccountInfoController@show');
