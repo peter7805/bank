@@ -10,7 +10,6 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <style>
     .login_box {
       width: 40%;
@@ -63,7 +62,9 @@
     </div>
   </nav>
   <div class="container">
-    <h5 class="m-3">帳戶資訊--@if(Session::has('id'))<span>姓名：{{$name}}  ｜</span><span>餘額：{{$balance}}</span>@endif</h5>
+    <h5 class="m-3">帳戶資訊--
+      @if(Session::has('id'))<span>姓名：{{$name}}｜</span><span>餘額：{{$balance}}</span>@endif
+    </h5>
     <div class="login_box p-5">
       <h4 class="text-center mb-3" style="color: red">提款</h4>
       <form>
@@ -73,7 +74,7 @@
         </div>
         <div class="form-group">
           <label for="w_money">提款金額：</label>
-          <input type="number" maxlength="10" class="form-control" id="w_money" placeholder="請輸入金額">
+          <input type="number" maxlength="10" class="form-control" id="w_money"  placeholder="請輸入金額">
         </div>
         <div class="form-group">
           <label for="w_remark">備註：</label>
@@ -93,7 +94,7 @@
       var w_amount = $("#w_amount").val();
       var w_money = $("#w_money").val();
       var w_remark = $("#w_remark").val();
-      if (w_money != "" && w_money <= w_amount && w_money != 0) {
+      if (w_money != "" && parseInt(w_money) <= parseInt(w_amount) && w_money > 0) {
         $.ajax({
           type: "POST",
           url: "/bank/withdrawal",
@@ -110,7 +111,7 @@
           success: function(msg) {
             if(msg == 1){
               alert('提款成功');
-              location.reload();
+              window.location.href = "/bank/homepage";
             }else{
               alert(msg);            
             }
@@ -124,8 +125,10 @@
           alert('輸入金額不得為空');
         }else if(w_money == 0){
           alert('提款金額不得為0');
-        }else if(w_money > w_amount){
+        }else if(parseInt(w_money) > parseInt(w_amount)){
           alert('提款金額不得大於帳戶餘額');
+        }else if(w_money < 0){
+          alert('輸入金額不得為負數');
         }
       }
     });

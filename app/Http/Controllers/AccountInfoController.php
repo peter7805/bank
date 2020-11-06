@@ -54,9 +54,12 @@ class AccountInfoController extends Controller
         }
     }
     #紀錄
-    public function show(Request $request, AccountInfo $accountInfo)
+    public function show(Request $request, AccountInfo $accountInfo, Accounts $accounts)
     {
-
+        if (Session::has('id')) {
+            $id = Session::get('id');
+            $data = $accounts->selectData($id);
+        }
         $user_id = session('id');
         $start_time = date("Y-m-d H:i:s", strtotime($request->start_time));
         $end_time = date("Y-m-d H:i:s", (strtotime($request->end_time) + 86399));
@@ -64,33 +67,65 @@ class AccountInfoController extends Controller
             return view('bank.homepage', ['errormsg' => '開始日期不得大於結束日期']);
         }
         $searchData = $accountInfo->searchData($user_id, $start_time, $end_time);
-        return view('bank.homepage', ['searchData' => $searchData]);
+        return view('bank.homepage', ['searchData' => $searchData, 'name' => $data['name'], 'balance' => $data['balance']]);
     }
     #存款
     public function deposit(Request $request, AccountInfo $accountInfo)
     {
         $user_id = $request->user_id;
-        $number = date("YmdHis", mktime(date('H') + 8, date('i'), date('s'), date('m'), date('d'), date('Y'))) . rand(1000, 9999);
-        $amount = intval($request->amount);
-        $money = intval($request->money);
-        $balance = $amount + $money;
-        $type = '存款';
-        $remark = $request->remark;
-        $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $type, $remark);
-        return $result;
+        DB::beginTransaction();
+        try {
+            DB::table('accounts')->where('id', $user_id)->lockForUpdate()->get();
+            $txt = $accountInfo->searchLastData($user_id);
+            if (empty($txt)) {
+                $txt = 1;
+            } else {
+                $txt++;
+            }
+            $new_txt = str_pad($txt, 5, "0", STR_PAD_LEFT);
+            $number = date("YmdHis", mktime(date('H') + 8, date('i'), date('s'), date('m'), date('d'), date('Y'))) . $new_txt;
+            $amount = DB::table('accounts')->where('id', $user_id)->value('balance');
+            $money = intval($request->money);
+            $balance = $amount + $money;
+            $type = '存款';
+            $remark = $request->remark;
+            $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $type, $remark);
+            echo $result;
+            sleep(10);
+            DB::commit();
+        } catch (\Exception $e) {
+            $e->getMessage();
+            DB::rollBack();
+            return false;
+        }
     }
     #提款
     public function withdrawal(Request $request, AccountInfo $accountInfo)
     {
         $user_id = $request->user_id;
-        $number = date("YmdHis", mktime(date('H') + 8, date('i'), date('s'), date('m'), date('d'), date('Y'))) . rand(100, 999);
-        $amount = intval($request->amount);
-        $money = intval($request->money);
-        $balance = $amount - $money;
-        $type = '提款';
-        $remark = $request->remark;
-
-        $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $type, $remark);
-        return $result;
+        DB::beginTransaction();
+        try {
+            DB::table('accounts')->where('id', $user_id)->lockForUpdate()->get();
+            $txt = $accountInfo->searchLastData($user_id);
+            if (empty($txt)) {
+                $txt = 1;
+            } else {
+                $txt++;
+            }
+            $new_txt = str_pad($txt, 5, "0", STR_PAD_LEFT);
+            $number = date("YmdHis", mktime(date('H') + 8, date('i'), date('s'), date('m'), date('d'), date('Y'))) . $new_txt;
+            $amount = DB::table('accounts')->where('id', $user_id)->value('balance');
+            $money = intval($request->money);
+            $balance = $amount - $money;
+            $type = '提款';
+            $remark = $request->remark;
+            $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $type, $remark);
+            echo $result;
+            DB::commit();
+        } catch (\Exception $e) {
+            return false;
+            $e->getMessage();
+            DB::rollBack();
+        }
     }
 }

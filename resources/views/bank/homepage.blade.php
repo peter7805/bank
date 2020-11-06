@@ -10,7 +10,6 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <style>
     .login_box {
       width: 40%;
@@ -64,16 +63,15 @@
   </nav>
   <div class="container">
     <h5 class="m-3">帳戶資訊--
-      @if(Session::has('id'))<span>姓名：{{session('name')}}｜</span><span>餘額：{{session('balance')}}</span>@endif
+      @if(Session::has('id'))<span>姓名：{{$name}}｜</span><span>餘額：{{$balance}}</span>@endif
     </h5>
     <div>
       <table class="table table-bordered">
         <thead class="thead-light">
           <tr>
-            <th scope="col" style="width:5%;"></th>
             <th scope="col" style="width:25%;">交易編號</th>
             <th scope="col" style="width:10%;">交易類型</th>
-            <th scope="col" style="width:10%;">交易金額</th>
+            <th scope="col" style="width:15%;">交易金額</th>
             <th scope="col" style="width:10%;">餘額</th>
             <th scope="col" style="width:15%;">備註</th>
             <th scope="col" style="width:25%;">交易時間</th>
@@ -83,13 +81,12 @@
           @if (isset($searchData))
             @foreach ($searchData as $data)
               <tr>
-                <th scope="col" style="width:5%;">{{$data->id}}</th>
                 <th scope="col" style="width:25%;">{{$data->number}}</th>
                 <th scope="col" style="width:10%;">{{$data->type}}</th>
-                <th scope="col" style="width:10%;">{{$data->money}}</th>
+                <th scope="col" style="width:15%;">{{$data->money}}</th>
                 <th scope="col" style="width:10%;">{{$data->balance}}</th>
                 <th scope="col" style="width:15%;">{{$data->remark}}</th>
-                <th scope="col" style="width:25%;">{{$data->create_time}}</th>
+                <th scope="col" style="width:25%;">{{$data->created_at}}</th>
               </tr>
             @endforeach              
           @endif
@@ -153,7 +150,7 @@
                 res[i].remark = '';
               }
               $("#info").append(
-                `<tr><th scope = "row" style="width:5%;">${res[i].id}</th><td style="width:25%;">${res[i].number}</td><td style="width:10%;">${res[i].type}</td><td style="width:10%;">${res[i].money}</td><td style="width:10%;">${res[i].balance}</td><td style="width:15%;">${res[i].remark}</td><td style="width:25%;">${res[i].create_time}</td></tr>`
+                `<tr><th scope = "row" style="width:5%;">${res[i].id}</th><td style="width:25%;">${res[i].number}</td><td style="width:10%;">${res[i].type}</td><td style="width:10%;">${res[i].money}</td><td style="width:10%;">${res[i].balance}</td><td style="width:15%;">${res[i].remark}</td><td style="width:25%;">${res[i].created_at}</td></tr>`
               );
             }            
           },

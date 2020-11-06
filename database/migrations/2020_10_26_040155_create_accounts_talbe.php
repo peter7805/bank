@@ -22,7 +22,7 @@ class CreateAccountsTalbe extends Migration
             $table->integer('balance')->nullable();
             $table->integer('login_failed')->nullable();
             $table->timestamp('login_time')->nullable();
-            $table->timestamp('create_time')->useCurrent();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

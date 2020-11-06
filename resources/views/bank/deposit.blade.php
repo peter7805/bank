@@ -112,7 +112,7 @@
           success: function(msg) {
             if(msg == 1){
               alert('存款成功');
-              location.reload();
+              window.location.href = "/bank/homepage";
             }else{
               alert(msg);            
             }

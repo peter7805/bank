@@ -22,7 +22,7 @@ class CreateAccountInfoTable extends Migration
             $table->double('balance', 10, 2);
             $table->string('type', 2);
             $table->string('remark', 320)->nullable();
-            $table->timestamp('create_time')->useCurrent();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 
