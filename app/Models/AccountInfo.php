@@ -11,6 +11,7 @@ class AccountInfo extends Model
     use HasFactory;
     public $timestamps = false;
     protected $table = 'accountInfo';
+    protected $fillable = ['user_id', 'number', 'amount', 'money', 'balance', 'type', 'remark'];
 
     public function insertData($user_id, $number, $amount, $money, $balance, $type, $remark = "")
     {

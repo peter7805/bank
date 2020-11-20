@@ -23,9 +23,9 @@ class Accounts extends Model
     public function selectData($account)
     {
         //Query Builder寫法
-        $sqlData = $this->where('account', $account)->orWhere('id', $account)->first();
+        // $sqlData = $this->where('account', $account)->orWhere('id', $account)->first();
         //Eloquent ORM寫法
-        // $sqlData = Accounts::where('account', $account)->orWhere('id', $account)->first();
+        $sqlData = Accounts::where('account', $account)->orWhere('id', $account)->first();
         return $sqlData;
     }
 

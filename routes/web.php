@@ -49,3 +49,7 @@ Route::post('/bank/deposit', 'AccountInfoController@deposit');
 Route::post('/bank/withdrawal', 'AccountInfoController@withdrawal');
 //搜尋
 Route::get('/bank/show', 'AccountInfoController@show');
+
+Route::get('/test', function () {
+    Illuminate\Support\Facades\Log::info('觸發 Test');
+});

@@ -91,7 +91,6 @@ class AccountInfoController extends Controller
             $remark = $request->remark;
             $result = $accountInfo->insertData($user_id, $number, $amount, $money, $balance, $type, $remark);
             echo $result;
-            sleep(10);
             DB::commit();
         } catch (\Exception $e) {
             $e->getMessage();
